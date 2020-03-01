@@ -85,7 +85,7 @@ def main():
     game_over = False
     turn = 0
 
-    winnerfont = pygame.font.SysFont("monospace", 64)
+    gameoverfont = pygame.font.SysFont("monospace", 64)
     size = (WIDTH, HEIGHT)
 
     screen = pygame.display.set_mode(size)
@@ -120,7 +120,7 @@ def main():
                         drop_piece(board, row, col, 1)
 
                         if winning_move(board, 1):
-                            label = winnerfont.render("Pelaaja 1 voitti!", 1, RED)
+                            label = gameoverfont.render("Pelaaja 1 voitti!", 1, RED)
                             screen.blit(label, (40,10))
                             game_over = True
                 
@@ -134,9 +134,19 @@ def main():
                         drop_piece(board, row, col, 2)
 
                         if winning_move(board, 2):
-                            label = winnerfont.render("Pelaaja 2 voitti!", 1, YELLOW)
+                            label = gameoverfont.render("Pelaaja 2 voitti!", 1, YELLOW)
                             screen.blit(label, (40,10))
                             game_over = True
+                        else:
+                            # Check if board is full -> TIE
+                            tie = True
+                            for c in range(COLUMNS):
+                                if board[ROWS-1][c] == 0:
+                                    tie = False
+                            if tie:
+                                label = gameoverfont.render("Tasapeli", 1, BLUE)
+                                screen.blit(label, (200,10))
+                                game_over = True
 
                 draw_board(board)
 
@@ -145,6 +155,7 @@ def main():
 
                 if game_over:
                     pygame.time.wait(5000)
+
 
     pygame.quit()
     sys.exit(0)
